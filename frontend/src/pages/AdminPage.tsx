@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import api from "../lib/api";
 import { Plus, Users, Library, BarChart3, Trash2, Edit3, Save, X, CheckCircle2 } from "lucide-react";
 import { motion } from "motion/react";
 import { bookService } from "../services/books";
@@ -18,9 +18,7 @@ export default function AdminPage() {
   const [isEditing, setIsEditing] = React.useState<string | null>(null);
   const [formData, setFormData] = React.useState<Partial<Book>>({});
 
-  const getHeaders = () => ({
-    headers: { Authorization: `Bearer ${authService.getToken()}` }
-  });
+
   
   const categories = React.useMemo(() => {
     const counts = books.reduce<Record<string, number>>((acc, book) => {
@@ -53,7 +51,7 @@ export default function AdminPage() {
       const booksData = await bookService.getAllBooks();
       setBooks(booksData);
       
-      const usersRes = await axios.get("/api/admin/users", getHeaders());
+      const usersRes = await api.get("/api/admin/users");
       setUsers(usersRes.data.map((u: any) => ({ ...u, uid: u.id || u._id })));
 
       const pending = await adminService.getPendingRequests();
