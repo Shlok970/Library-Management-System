@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../lib/api";
 import { UserProfile, UserRole } from "../types";
 
 const API_URL = "/api/auth";
@@ -10,7 +10,7 @@ export const authService = {
   },
 
   async register(name: string, email: string, password: string, role?: string): Promise<UserProfile> {
-    const response = await axios.post(`${API_URL}/register`, { name, email, password, role });
+    const response = await api.post(`${API_URL}/register`, { name, email, password, role });
     const { token, user: rawUser } = response.data;
     const user = this.mapUser(rawUser);
     localStorage.setItem("token", token);
@@ -19,7 +19,7 @@ export const authService = {
   },
 
   async login(email: string, password: string): Promise<UserProfile> {
-    const response = await axios.post(`${API_URL}/login`, { email, password });
+    const response = await api.post(`${API_URL}/login`, { email, password });
     const { token, user: rawUser } = response.data;
     const user = this.mapUser(rawUser);
     localStorage.setItem("token", token);

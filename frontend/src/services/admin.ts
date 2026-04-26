@@ -1,17 +1,13 @@
-import axios from "axios";
+import api from "../lib/api";
 import { BorrowRecord } from "../types";
 import { authService } from "./auth";
 
 const API_URL = "/api/admin/requests";
 
-const getHeaders = () => ({
-  headers: { Authorization: `Bearer ${authService.getToken()}` }
-});
-
 export const adminService = {
   async getPendingRequests() {
     try {
-      const response = await axios.get(API_URL, getHeaders());
+      const response = await api.get(API_URL);
       return response.data;
     } catch (error) {
       console.error("Error fetching pending requests:", error);
@@ -21,7 +17,7 @@ export const adminService = {
 
   async approveRequest(id: string, dueDate?: string) {
     try {
-      const response = await axios.post(`${API_URL}/${id}/approve`, { dueDate }, getHeaders());
+      const response = await api.post(`${API_URL}/${id}/approve`, { dueDate });
       return response.data;
     } catch (error) {
       console.error("Error approving request:", error);
@@ -31,7 +27,7 @@ export const adminService = {
 
   async getStats() {
     try {
-      const response = await axios.get("/api/admin/stats", getHeaders());
+      const response = await api.get("/api/admin/stats");
       return response.data as { revenue: number };
     } catch (error) {
       console.error("Error fetching admin stats:", error);
@@ -41,7 +37,7 @@ export const adminService = {
 
   async denyRequest(id: string) {
     try {
-      const response = await axios.post(`${API_URL}/${id}/deny`, {}, getHeaders());
+      const response = await api.post(`${API_URL}/${id}/deny`, {});
       return response.data;
     } catch (error) {
       console.error("Error denying request:", error);
